@@ -9,11 +9,14 @@ public class AIController : MonoBehaviour
     [SerializeField] private List<Vector2Int> path;
     [SerializeField] private int speed = 5;
     [SerializeField] private int x = 0;
-    [SerializeField] public int MaxDistance = 5;
-    [SerializeField] public int ActionPoints = 2;
+    [SerializeField] public int MaxDistance = 5; //Puntos de movimiento
+    [SerializeField] public int ActionPoints = 1;
     [SerializeField] private bool isMoving;
     [SerializeField] private bool isAtking;
     [SerializeField] private bool AITurn;
+
+
+    public GameObject ATKZone;
 
     public TurnManager TM;
 
@@ -29,11 +32,25 @@ public class AIController : MonoBehaviour
                 }
             }
 
-            if (isAtking == true) //&& ActionPoints != 0)
+            if (isAtking == true)
             {
                 path = PathGenerator.pathFinding.FindPath(PositionToVector2Int(), PlayerPositionToVector2Int());
-                Debug.Log(path);
+
+                if (ActionPoints != 0)
+                {
+                    ActionPoints--;
+                    ATKZone.SetActive(true);
+                    ATKZone.transform.position = Player.transform.position;
+                } else if (ActionPoints == 0)
+                {
+                    //ATKZone.SetActive(false);
+                    isAtking = false;
+                }
+
+
             }
+
+            if (isMoving == false && isAtking == false && MaxDistance == 0) { TM.EndAITurn(); }
         }
     }
 
@@ -47,6 +64,8 @@ public class AIController : MonoBehaviour
     public void AIEndTurn()
     {
         AITurn = false;
+        isAtking = false;
+        isMoving = false;
         MaxDistance = 5;
         ActionPoints = 2;
     }
@@ -81,11 +100,11 @@ public class AIController : MonoBehaviour
 
         if (MaxDistance == x)
         {
-            MaxDistance = MaxDistance - x;
-            x = 0;
             isMoving = false;
 
             if(isMoving == false && isAtking == false)TM.EndAITurn();
+            MaxDistance = MaxDistance - x;
+            x = 0;
         }
 
 

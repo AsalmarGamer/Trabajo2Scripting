@@ -9,8 +9,8 @@ public class MovementByClick : MonoBehaviour
     [SerializeField] private int x = 0;
     [SerializeField] public int MaxDistance = 5;
     [SerializeField] public int ActionPoints = 4;
-    private bool isMoving;
-    private bool isPlayerTurn;
+    [SerializeField] private bool isMoving;
+    [SerializeField] private bool isPlayerTurn;
 
     void Update()
     {
