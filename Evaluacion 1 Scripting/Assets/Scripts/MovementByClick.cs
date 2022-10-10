@@ -8,26 +8,45 @@ public class MovementByClick : MonoBehaviour
     [SerializeField] private int speed = 5;
     [SerializeField] private int x = 0;
     [SerializeField] public int MaxDistance = 5;
+    [SerializeField] public int ActionPoints = 4;
     private bool isMoving;
+    private bool isPlayerTurn;
 
     void Update()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame && !isMoving)
+        if (isPlayerTurn == true)
         {
-            Vector2 mousePosition = Mouse.current.position.ReadValue();
-            Vector2 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);
-            if (hit && hit.collider.gameObject.TryGetComponent(out Walkable component))
+            if (Mouse.current.leftButton.wasPressedThisFrame && !isMoving)
             {
-                path = PathGenerator.pathFinding.FindPath(PositionToVector2Int(), component.GetCellID());
-                if(MaxDistance >= path.Count-1)
+                Vector2 mousePosition = Mouse.current.position.ReadValue();
+                Vector2 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+                RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);
+                if (hit && hit.collider.gameObject.TryGetComponent(out Walkable component))
                 {
-                    MaxDistance = MaxDistance - path.Count + 1;
-                    isMoving = true;
-                }
+                    path = PathGenerator.pathFinding.FindPath(PositionToVector2Int(), component.GetCellID());
+                    if (MaxDistance >= path.Count - 1)
+                    {
+                        MaxDistance = MaxDistance - path.Count + 1;
+                        isMoving = true;
+                    }
 
+                }
             }
         }
+    }
+
+    public void StartTurn()
+    {
+        isPlayerTurn = true;
+        MaxDistance = 5;
+        ActionPoints = 4;
+    }
+
+    public void EndTurn()
+    {
+        isPlayerTurn = false;
+        MaxDistance = 5;
+        ActionPoints = 4;
     }
 
     private void FixedUpdate()

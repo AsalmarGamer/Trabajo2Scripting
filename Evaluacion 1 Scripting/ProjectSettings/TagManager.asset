@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Tierra
   - Mar
+  - Enemy
   layers:
   - Default
   - TransparentFX
